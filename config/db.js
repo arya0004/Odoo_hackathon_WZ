@@ -35,6 +35,7 @@ const User = sequelize.define(
     email: { type: DataTypes.STRING, allowNull: false, unique: true },
     phone: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING, allowNull: false },
+    profile_photo: { type: DataTypes.STRING },
     role: {
       type: DataTypes.ENUM("Admin", "HR", "Payroll", "Employee"),
       defaultValue: "Employee",
@@ -45,10 +46,21 @@ const User = sequelize.define(
 );
 
 // ✅ Attendance
+// ✅ Attendance
 const Attendance = sequelize.define(
-  "attendance",
+  "Attendance",
   {
     attendance_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "users",
+        key: "user_id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    },
     date: { type: DataTypes.DATEONLY, allowNull: false },
     status: {
       type: DataTypes.ENUM("Present", "Absent", "Leave"),
@@ -56,8 +68,15 @@ const Attendance = sequelize.define(
     },
     check_in: { type: DataTypes.TIME },
     check_out: { type: DataTypes.TIME },
+
+    // ✅ NEW FIELDS
+    work_hours: { type: DataTypes.FLOAT, defaultValue: 0 },
+    extra_hours: { type: DataTypes.FLOAT, defaultValue: 0 },
   },
-  { tableName: "attendances", timestamps: true }
+  {
+    tableName: "attendances",
+    timestamps: true,
+  }
 );
 
 // ✅ Leave

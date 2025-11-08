@@ -495,3 +495,28 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+export const updateProfilePhoto = async (req, res) => {
+  try {
+    const userId = req.user.id; // from JWT middleware
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    // Save only the relative path
+    const photoPath = `/uploads/${req.file.filename}`;
+
+    await User.update(
+      { profile_photo: photoPath },
+      { where: { user_id: userId } }
+    );
+
+    res.status(200).json({
+      message: "✅ Profile photo uploaded successfully!",
+      photo: photoPath,
+    });
+  } catch (error) {
+    console.error("❌ updateProfilePhoto Error:", error);
+    res.status(500).json({ message: "Server error uploading photo" });
+  }
+};

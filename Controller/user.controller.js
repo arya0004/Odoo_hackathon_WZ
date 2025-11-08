@@ -349,8 +349,6 @@ import transporter from "../config/nodemailer.js";
 //   }
 // };
 
-
-
 // server/Controller/user.controller.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -377,7 +375,9 @@ export const registerUser = async (req, res) => {
 
     // 3️⃣ Generate login_id → OIJD20250001 (example)
     const companyCode = company_name.substring(0, 2).toUpperCase();
-    const nameCode = (name.split(" ")[0][0] + name.split(" ")[1]?.[0] || "X").toUpperCase();
+    const nameCode = (
+      name.split(" ")[0][0] + name.split(" ")[1]?.[0] || "X"
+    ).toUpperCase();
     const year = new Date().getFullYear();
     const userCount = await User.count();
     const serial = String(userCount + 1).padStart(4, "0");
@@ -437,6 +437,10 @@ export const loginUser = async (req, res) => {
       sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000,
     });
+    if (!user.is_first_login) {
+      user.is_first_login = true;
+      await user.save();
+    }
 
     res.status(200).json({
       message: "✅ Login successful",
@@ -477,11 +481,19 @@ export const getUserProfile = async (req, res) => {
     const userId = req.params.id;
 
     const user = await User.findByPk(userId, {
-      attributes: ["user_id", "login_id", "name", "email", "phone", "role", "join_date"],
+      attributes: [
+        "user_id",
+        "login_id",
+        "name",
+        "email",
+        "phone",
+        "role",
+        "join_date",
+      ],
       include: {
         model: Company,
-        attributes: ["company_name", "company_logo"]
-      }
+        attributes: ["company_name", "company_logo"],
+      },
     });
 
     if (!user) {

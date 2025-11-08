@@ -43,6 +43,12 @@ unpaid_leave_balance: { type: DataTypes.INTEGER, defaultValue: 0 },
       type: DataTypes.ENUM("Admin", "HR", "Payroll", "Employee"),
       defaultValue: "Employee",
     },
+    is_first_login: {
+  type: DataTypes.BOOLEAN,
+  allowNull: false,
+  defaultValue: false,
+}
+,
     join_date: { type: DataTypes.DATEONLY, defaultValue: Sequelize.NOW },
   },
   { tableName: "users", timestamps: true }

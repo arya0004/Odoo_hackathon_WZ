@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* keep the site light regardless of extensions */
+:root { color-scheme: light; }
+body  { background: #fff; }
+
+/* Font utilities */
+.font-brand   { font-family: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+.font-display { font-family: "Outfit", system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+.font-hand    { font-family: "Caveat", ui-sans-serif, system-ui; }
+.font-script  { font-family: "Dancing Script", ui-sans-serif, system-ui; }

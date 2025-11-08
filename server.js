@@ -45,6 +45,9 @@ import leaveRoutes from "./routes/leave.routes.js";
 
 // ✅ Mount Leave routes
 app.use("/api/leave", leaveRoutes);
+import adminRoutes from "./routes/admin.routes.js"; // ✅ Import admin routes
+
+app.use("/api/admin", adminRoutes); // ✅ Mount the route
 
 // ✅ Test Route
 app.get("/", (req, res) => {

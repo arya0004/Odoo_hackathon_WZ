@@ -61,3 +61,54 @@ export const updateUserRole = async (req, res) => {
     res.status(500).json({ message: "Server error updating user role" });
   }
 };
+
+
+// ✅ Get salary info for specific employee
+export const getEmployeeSalaryInfo = async (req, res) => {
+  try {
+    if (!["Admin", "Payroll"].includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const { user_id } = req.params;
+    const employee = await User.findByPk(user_id, {
+      attributes: [
+        "user_id", "name", "email", "role",
+        "monthly_wage", "basic_salary", "hra", "standard_allowance",
+        "performance_bonus", "leave_travel_allowance", "fixed_allowance",
+        "pf_rate", "professional_tax", "working_days_per_week", "break_time_hours"
+      ]
+    });
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.status(200).json({ salaryInfo: employee });
+  } catch (error) {
+    console.error("❌ Error fetching salary info:", error);
+    res.status(500).json({ message: "Server error fetching salary info" });
+  }
+};
+
+// ✅ Update salary info
+export const updateEmployeeSalaryInfo = async (req, res) => {
+  try {
+    if (!["Admin", "Payroll"].includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    const { user_id } = req.params;
+    const employee = await User.findByPk(user_id);
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    await employee.update(req.body);
+    res.status(200).json({ message: "✅ Salary information updated successfully" });
+  } catch (error) {
+    console.error("❌ Error updating salary info:", error);
+    res.status(500).json({ message: "Server error updating salary info" });
+  }
+};

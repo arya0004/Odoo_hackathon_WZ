@@ -80,3 +80,51 @@ export const adminCreateUser = async (req, res) => {
     });
   }
 };
+
+
+export const getEmployeeFullProfile = async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({ message: "Access denied: Admins only" });
+    }
+
+    const { user_id } = req.params;
+
+    const employee = await User.findByPk(user_id, {
+      include: [{ model: Company, attributes: ["company_name"] }],
+    });
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    res.status(200).json({ profile: employee });
+  } catch (error) {
+    console.error("❌ Error fetching full profile:", error);
+    res.status(500).json({ message: "Server error fetching profile" });
+  }
+};
+
+export const updateEmployeeFullProfile = async (req, res) => {
+  try {
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({ message: "Access denied: Admins only" });
+    }
+
+    const { user_id } = req.params;
+    const employee = await User.findByPk(user_id);
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found" });
+    }
+
+    // Prevent updating restricted fields
+    const { login_id, email, company_id, role, manager_id, ...allowedUpdates } = req.body;
+
+    await employee.update(allowedUpdates);
+    res.status(200).json({ message: "✅ Employee profile updated successfully" });
+  } catch (error) {
+    console.error("❌ Error updating profile:", error);
+    res.status(500).json({ message: "Server error updating profile" });
+  }
+};

@@ -37,10 +37,14 @@ try {
 // ✅ Mount Routes
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/auth", userRoute);
-import leaveRoutes from "./routes/leave.routes.js";
-app.use("/api/leave", leaveRoutes);
+// import leaveRoutes from "./routes/leave.routes.js";
+// app.use("/api/leave", leaveRoutes);
 import employeeRoutes from "./routes/employee.routes.js";
 app.use("/api/employee", employeeRoutes);
+import leaveRoutes from "./routes/leave.routes.js";
+
+// ✅ Mount Leave routes
+app.use("/api/leave", leaveRoutes);
 
 // ✅ Test Route
 app.get("/", (req, res) => {

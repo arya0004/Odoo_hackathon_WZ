@@ -36,6 +36,9 @@ const User = sequelize.define(
     phone: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING, allowNull: false },
     profile_photo: { type: DataTypes.STRING },
+    paid_leave_balance: { type: DataTypes.INTEGER, defaultValue: 24 },
+sick_leave_balance: { type: DataTypes.INTEGER, defaultValue: 7 },
+unpaid_leave_balance: { type: DataTypes.INTEGER, defaultValue: 0 },
     role: {
       type: DataTypes.ENUM("Admin", "HR", "Payroll", "Employee"),
       defaultValue: "Employee",
@@ -84,13 +87,24 @@ const Leave = sequelize.define(
   "leave",
   {
     leave_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    leave_type: { type: DataTypes.STRING },
-    start_date: { type: DataTypes.DATEONLY },
-    end_date: { type: DataTypes.DATEONLY },
+    
+    // Existing field
+    leave_type: { type: DataTypes.STRING, allowNull: false }, // e.g., "Sick Leave", "Paid Leave"
+
+    // 🆕 New field
+    time_off_type: {
+      type: DataTypes.ENUM("Paid Time Off", "Sick Time Off","Unpaid Time Off"),
+      allowNull: false,
+      defaultValue: "Paid Time Off",
+    },
+
+    start_date: { type: DataTypes.DATEONLY, allowNull: false },
+    end_date: { type: DataTypes.DATEONLY, allowNull: false },
     status: {
       type: DataTypes.ENUM("Pending", "Approved", "Rejected"),
       defaultValue: "Pending",
     },
+    attachment: { type: DataTypes.STRING, allowNull: true }, // for sick certificate, etc.
   },
   { tableName: "leaves", timestamps: true }
 );

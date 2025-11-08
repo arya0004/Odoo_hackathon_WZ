@@ -1,0 +1,23 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+
+
+# Dependency directory
+node_modules
+
+# Build output
+dist
+build
+
+# OS / Editor-specific files
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.sw?
+
+# Optional: Ignore test coverage
+coverage

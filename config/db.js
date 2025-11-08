@@ -195,6 +195,7 @@ const sequelize = new Sequelize("workzen_hrms_new", "root", process.env.DB_PASS,
   host: "localhost",
   dialect: "mysql",
   logging: false,
+   timezone: "+05:30",
   define: {
     freezeTableName: true,
     underscored: true,

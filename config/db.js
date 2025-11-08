@@ -3,15 +3,20 @@ import { Sequelize, DataTypes } from "sequelize";
 import dotenv from "dotenv";
 dotenv.config();
 
+// ✅ Safe Sequelize configuration
 const sequelize = new Sequelize("workzen_hrms_new", "root", process.env.DB_PASS, {
   host: "localhost",
   dialect: "mysql",
   logging: false,
+  define: {
+    freezeTableName: true, // ❗ Prevents Sequelize from pluralizing model names
+    underscored: true,     // use snake_case for FKs & consistency
+  },
 });
 
 // ✅ Company
 const Company = sequelize.define(
-  "Company",
+  "company",
   {
     company_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     company_name: { type: DataTypes.STRING, allowNull: false },
@@ -22,7 +27,7 @@ const Company = sequelize.define(
 
 // ✅ User
 const User = sequelize.define(
-  "User",
+  "user",
   {
     user_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     login_id: { type: DataTypes.STRING, unique: true },
@@ -41,11 +46,14 @@ const User = sequelize.define(
 
 // ✅ Attendance
 const Attendance = sequelize.define(
-  "Attendance",
+  "attendance",
   {
     attendance_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     date: { type: DataTypes.DATEONLY, allowNull: false },
-    status: { type: DataTypes.ENUM("Present", "Absent", "Leave"), defaultValue: "Absent" },
+    status: {
+      type: DataTypes.ENUM("Present", "Absent", "Leave"),
+      defaultValue: "Absent",
+    },
     check_in: { type: DataTypes.TIME },
     check_out: { type: DataTypes.TIME },
   },
@@ -54,7 +62,7 @@ const Attendance = sequelize.define(
 
 // ✅ Leave
 const Leave = sequelize.define(
-  "Leave",
+  "leave",
   {
     leave_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     leave_type: { type: DataTypes.STRING },
@@ -70,7 +78,7 @@ const Leave = sequelize.define(
 
 // ✅ Payroll
 const Payroll = sequelize.define(
-  "Payroll",
+  "payroll",
   {
     payroll_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     month: { type: DataTypes.STRING },
@@ -97,4 +105,5 @@ Leave.belongsTo(User, { foreignKey: "user_id" });
 User.hasMany(Payroll, { foreignKey: "user_id", onDelete: "CASCADE" });
 Payroll.belongsTo(User, { foreignKey: "user_id" });
 
+// ✅ Export
 export { sequelize, Company, User, Attendance, Leave, Payroll };

@@ -4,6 +4,7 @@ import {
   loginUser,
   logout,
   isAuthenticated,
+  getUserProfile,
 } from "../Controller/user.controller.js"; // ✅ Only import what exists
 
 import { getUserDetails } from "../Controller/userDetails.js";
@@ -19,5 +20,6 @@ userRoute.post("/loginUser", loginUser);
 userRoute.post("/logout", userAuth, logout);
 userRoute.get("/isAuth", userAuth, isAuthenticated);
 userRoute.get("/data", userAuth, getUserDetails);
+userRoute.get("/profile/:id", userAuth, getUserProfile);
 
 export default userRoute;

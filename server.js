@@ -3,10 +3,12 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import { sequelize, Company, User, Attendance, Leave, Payroll } from "./config/db.js";
-import userRoute from "./routes/user.routes.js"; // ✅ Import your route file
+import { sequelize } from "./config/db.js";
+import userRoute from "./routes/user.routes.js";
+import attendanceRoutes from "./routes/attendance.routes.js";
 
 dotenv.config();
+
 const app = express();
 const port = Number(process.env.PORT) || 4000;
 
@@ -16,25 +18,26 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
 
-// ✅ Database Connection
+// ✅ Database Connection and Sync
 try {
   await sequelize.authenticate();
   console.log("✅ MySQL connected successfully.");
 
-  // ✅ Force recreate tables in correct order ONCE
-  await Company.sync({ force: true });
-  await User.sync({ force: true });
-  await Attendance.sync({ force: true });
-  await Leave.sync({ force: true });
-  await Payroll.sync({ force: true });
+  // ✅ Synchronize all models safely (NO drop, just adjust schema)
+  await sequelize.sync({ alter: true });
 
-  console.log("✅ All tables created successfully.");
+  console.log("✅ All tables are up-to-date.");
 } catch (error) {
   console.error("❌ Database connection error:", error);
 }
 
 // ✅ Mount Routes
-app.use("/api/auth", userRoute); // 💥 This line is required for /api/auth/register etc.
+app.use("/api/attendance", attendanceRoutes);
+app.use("/api/auth", userRoute);
+import leaveRoutes from "./routes/leave.routes.js";
+app.use("/api/leave", leaveRoutes);
+import employeeRoutes from "./routes/employee.routes.js";
+app.use("/api/employee", employeeRoutes);
 
 // ✅ Test Route
 app.get("/", (req, res) => {

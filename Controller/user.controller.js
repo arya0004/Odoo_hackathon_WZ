@@ -471,3 +471,27 @@ export const isAuthenticated = async (req, res) => {
     res.status(401).json({ message: "Invalid or expired token" });
   }
 };
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findByPk(userId, {
+      attributes: ["user_id", "login_id", "name", "email", "phone", "role", "join_date"],
+      include: {
+        model: Company,
+        attributes: ["company_name", "company_logo"]
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ profile: user });
+  } catch (error) {
+    console.error("❌ Profile Error:", error);
+    res.status(500).json({ message: "Server error while fetching profile" });
+  }
+};
+

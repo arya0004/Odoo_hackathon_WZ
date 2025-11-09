@@ -1,58 +1,65 @@
-🏢 WorkZen HRMS
+**🏢 WorkZen HRMS**
 
-WorkZen is a modern, scalable Human Resource Management System (HRMS) built for seamless people operations.
-It unifies employee management, attendance tracking, travel (airplane) management, and payroll processing into a single intuitive platform — designed and developed for the Odoo Hackathon.
+WorkZen is a modern, scalable Human Resource Management System (HRMS) designed to streamline and automate HR operations.
+It combines Employee Management, Attendance Tracking, Airplane / Travel Management, and Payroll Processing — all in one unified platform.
 
-⚙️ Key Features
-👥 Employee & Role Management
+Built with precision for the Odoo Hackathon.
+
+**⚙️ Key Features**
+_👥 Employee & Role Management_
 
 Centralized employee directory
 
 Role-based access control (Admin / HR / Payroll / Employee)
 
-Profile and designation management
+Profile creation, updates, and department assignments
 
-🕒 Attendance Tracking
+_🕒 Attendance Tracking_
 
-Daily check-in / check-out system
+Daily check-in / check-out functionality
 
-Monthly attendance summary view
+Monthly attendance summary with visual logs
 
-Auto-sync with payroll calculations
+Auto-sync with payroll for accuracy
 
-✈️ Airplane / Travel Management
+_✈️ Airplane / Travel Management_
 
-Manage employee business trips and flight bookings
+Manage business trips and flight bookings for employees
 
 HR can approve or decline travel requests
 
-Auto-integrated with payroll for expense reimbursements
+Auto-integrated with payroll for travel reimbursements
 
-Includes travel summary reports per employee
+Generate travel summary reports per employee
 
-💸 Payroll & Payslip Generation
+_💸 Payroll & Payslip Generation_
 
 Automated monthly salary computation
 
-Dynamic inclusion of allowances, deductions, and travel reimbursements
+Supports allowances, deductions, and travel reimbursements
 
 Generates professional PDF salary slips using Puppeteer
 
-📊 Insights Dashboard
+Ensures data accuracy and timely payouts
 
-Unified dashboard showing attendance, travel, and payroll analytics
+_📊 Insights Dashboard_
 
-Clean visual summaries powered by Chart.js
+Unified dashboard for attendance, travel, and payroll analytics
 
-🧰 Technology Stack
-Layer	Technology Used
-Frontend	React.js, TailwindCSS
-Backend	Node.js, Express.js
-Database	MySQL (Sequelize ORM)
-Authentication	JWT, bcrypt
-PDF Generation	Puppeteer
-Charts	Chart.js
-UI/UX	Custom SVG assets + Tailwind components
+Visual insights powered by Chart.js
+
+Minimal and responsive interface
+
+**🧰 Technology Stack**
+Layer	Technology Used 
+Frontend	       React.js, TailwindCSS
+Backend	         Node.js, Express.js
+Database	       MySQL (Sequelize ORM)
+Authentication	 JWT, bcrypt
+PDF Generation	 Puppeteer
+Charts	         Chart.js
+UI/UX	           Custom SVG Assets + Tailwind Components
+
 📁 Project Structure
 WorkZen/
 │
@@ -69,17 +76,18 @@ WorkZen/
 │
 └── README.md
 
-🧩 Installation & Setup
-1️⃣ Clone the Repository
+**🧩 Installation & Setup**
+
+🪄 1️⃣ Clone the Repository
 git clone https://github.com/yourusername/workzen-hrms.git
 cd workzen-hrms
 
-2️⃣ Backend Setup
+⚙️ 2️⃣ Backend Setup
 cd server
 npm install
 
 
-Create a .env file in the /server directory:
+Create a .env file inside the /server directory:
 
 DB_NAME=workzen_hrms
 DB_USER=root
@@ -87,28 +95,28 @@ DB_PASS=yourpassword
 JWT_SECRET=your_secret_key
 
 
-Start the backend server:
+Run the backend server:
 
 npm run start
 
-3️⃣ Frontend Setup
+💻 3️⃣ Frontend Setup
 cd ../client
 npm install
 npm run dev
 
 
-Visit the app in your browser:
+Access the app on:
 🌐 http://localhost:5173
 
 🧾 Sample Salary Slip (PDF Preview)
 
-The salary slip includes:
+Includes:
 
 Company and employee details
 
-Worked days and travel reimbursements
+Worked days + travel reimbursements
 
-Detailed earnings and deductions
+Breakdown of earnings and deductions
 
 Net salary summary
 
@@ -116,7 +124,7 @@ Clean, corporate-grade layout
 
 Generated using Puppeteer for pixel-perfect precision.
 
-🤝 Contribution Workflow
+_🤝 Contribution Workflow_
 
 Fork this repository
 
@@ -130,22 +138,23 @@ Commit your changes
 git commit -m "Added new feature"
 
 
-Push to your branch and open a Pull Request 🎉
+Push to your branch
 
-👨‍💻 Team WorkZen
-Name	Role	Responsibilities
-Jineshwari Bagul	Team Lead / Frontend	UI Design, Integrations, User Flows
-Member 2	Backend Developer	Payroll Logic, APIs
-Member 3	Database Admin	Schema Design, Query Optimization
-Member 4	UI & Documentation	Branding, Presentation
-🎯 Project Vision
+Open a Pull Request 🎉
 
-To deliver a clean, efficient, and automated HRMS that eliminates manual HR workflows — empowering teams to focus on people, not paperwork.
+**👨‍💻 Team WorkZen**
+
+Jineshwari Bagul
+Nirwani Adhau
+Arya Manve
+Aashana Sonarkar
+
+**🎯 Project Vision**
+
+To build a clean, efficient, and automated HRMS that eliminates manual HR workflows — empowering HR teams to focus on people, not paperwork.
 
 💡 Acknowledgements
 
 Inspired by the Odoo Ecosystem
 
 Thanks to all Hackathon Mentors and Open-Source Contributors
-
-🌱 Built with precision, performance, and passion by Team WorkZen

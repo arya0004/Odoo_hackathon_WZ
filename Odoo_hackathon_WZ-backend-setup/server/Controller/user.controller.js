@@ -349,8 +349,6 @@ import transporter from "../config/nodemailer.js";
 //   }
 // };
 
-
-
 // server/Controller/user.controller.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -377,7 +375,9 @@ export const registerUser = async (req, res) => {
 
     // 3️⃣ Generate login_id → OIJD20250001 (example)
     const companyCode = company_name.substring(0, 2).toUpperCase();
-    const nameCode = (name.split(" ")[0][0] + name.split(" ")[1]?.[0] || "X").toUpperCase();
+    const nameCode = (
+      name.split(" ")[0][0] + name.split(" ")[1]?.[0] || "X"
+    ).toUpperCase();
     const year = new Date().getFullYear();
     const userCount = await User.count();
     const serial = String(userCount + 1).padStart(4, "0");
@@ -397,42 +397,11 @@ export const registerUser = async (req, res) => {
       company_id: company.company_id,
     });
 
-    
-    // Generate JWT for immediate login after signup
-    const token = jwt.sign(
-      { id: newUser.user_id, role: newUser.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
-
-    // For local dev with Vite proxy (same-origin) use Lax (simple + works on http)
-    res.cookie("token", token, {
-      httpOnly: true,
-      sameSite: "Lax",   // <- important for dev if you use Vite proxy
-      secure: false,     // <- keep false for http://localhost
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-
-    // return res.status(201).json({
-    //   message: "✅ User registered successfully",
-    //   login_id,
-    //   user: { id: newUser.user_id, name: newUser.name, role: newUser.role },
-    // });
-
-
     res.status(201).json({
       message: "✅ User registered successfully",
       login_id,
       user: { id: newUser.user_id, name: newUser.name, role: newUser.role },
     });
-
-
-
-    // res.status(201).json({
-    //   message: "✅ User registered successfully",
-    //   login_id,
-    //   user: { id: newUser.user_id, name: newUser.name, role: newUser.role },
-    // });
   } catch (error) {
     console.error("❌ Register Error:", error);
     res.status(500).json({ message: "Server error during registration" });
@@ -461,13 +430,31 @@ export const loginUser = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    // Send cookie
+
+    // after generating token
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "Lax",
-      secure: false,
+      secure: isProd,                 // ✅ only true in prod (HTTPS)
+      sameSite: isProd ? "None" : "Lax", // ✅ Lax for local http, None for HTTPS
+      path: "/",                      // ✅ helps clearing later too
       maxAge: 24 * 60 * 60 * 1000,
     });
+
+
+
+    // // Send cookie
+    // res.cookie("token", token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === "production",
+    //   sameSite: "None",
+    //   maxAge: 24 * 60 * 60 * 1000,
+    // });
+    if (!user.is_first_login) {
+      user.is_first_login = true;
+      await user.save();
+    }
 
     res.status(200).json({
       message: "✅ Login successful",
@@ -480,11 +467,23 @@ export const loginUser = async (req, res) => {
   }
 };
 
-// ✅ Logout User
+// // ✅ Logout User
+// export const logout = async (req, res) => {
+//   res.clearCookie("token");
+//   res.status(200).json({ message: "✅ Logged out successfully" });
+// };
+
 export const logout = async (req, res) => {
-  res.clearCookie("token");
+  const isProd = process.env.NODE_ENV === "production";
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "None" : "Lax",
+    path: "/",
+  });
   res.status(200).json({ message: "✅ Logged out successfully" });
 };
+
 
 // ✅ Middleware Authentication
 export const isAuthenticated = async (req, res) => {
@@ -508,11 +507,19 @@ export const getUserProfile = async (req, res) => {
     const userId = req.params.id;
 
     const user = await User.findByPk(userId, {
-      attributes: ["user_id", "login_id", "name", "email", "phone", "role", "join_date"],
+      attributes: [
+        "user_id",
+        "login_id",
+        "name",
+        "email",
+        "phone",
+        "role",
+        "join_date",
+      ],
       include: {
         model: Company,
-        attributes: ["company_name", "company_logo"]
-      }
+        attributes: ["company_name", "company_logo"],
+      },
     });
 
     if (!user) {

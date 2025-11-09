@@ -3,10 +3,40 @@ import { Leave, User } from "../config/db.js";
 import { Op } from "sequelize";
 
 // ✅ 1️⃣ Employee applies for leave (with optional attachment)
+// export const applyLeave = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const { leave_type, time_off_type, start_date, end_date } = req.body;
+
+//     if (!leave_type || !start_date || !end_date || !time_off_type) {
+//       return res.status(400).json({ message: "All fields are required" });
+//     }
+
+//     const attachment = req.file ? `/uploads/leaves/${req.file.filename}` : null;
+
+//     const leave = await Leave.create({
+//       user_id: userId,
+//       leave_type,
+//       time_off_type,
+//       start_date,
+//       end_date,
+//       status: "Pending",
+//       attachment,
+//     });
+
+//     res.status(201).json({
+//       message: "✅ Leave applied successfully!",
+//       leave,
+//     });
+//   } catch (error) {
+//     console.error("❌ Apply Leave Error:", error);
+//     res.status(500).json({ message: "Server error while applying for leave" });
+//   }
+// };
 export const applyLeave = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { leave_type, time_off_type, start_date, end_date } = req.body;
+    const { leave_type, time_off_type, start_date, end_date, description } = req.body;
 
     if (!leave_type || !start_date || !end_date || !time_off_type) {
       return res.status(400).json({ message: "All fields are required" });
@@ -20,6 +50,7 @@ export const applyLeave = async (req, res) => {
       time_off_type,
       start_date,
       end_date,
+      description, // ✅ store text input
       status: "Pending",
       attachment,
     });

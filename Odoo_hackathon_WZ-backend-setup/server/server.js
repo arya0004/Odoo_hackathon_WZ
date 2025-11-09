@@ -4,8 +4,19 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { sequelize } from "./config/db.js";
+import cron from "node-cron";
+import { cleanupInactiveUsers } from "./utils/cleanupInactiveUsers.js";
+
+
 import userRoute from "./routes/user.routes.js";
 import attendanceRoutes from "./routes/attendance.routes.js";
+import salaryRoutes from "./routes/salary.routes.js";
+//import adminRoutes from "./routes/admin.routes.js";
+
+//import employeeRoutes from "./routes/employee.routes.js";
+// import leaveRoutes from "./routes/leave.routes.js";
+// import adminRoutes from "./routes/admin.routes.js";
+import adminSettingsRoute from "./routes/adminSettings.routes.js";
 
 dotenv.config();
 
@@ -46,6 +57,11 @@ import leaveRoutes from "./routes/leave.routes.js";
 // ✅ Mount Leave routes
 app.use("/api/leave", leaveRoutes);
 
+import adminRoutes from "./routes/admin.routes.js"; // ✅ Import admin routes
+
+app.use("/api/admin", adminRoutes); // ✅ Mount the route
+app.use("/api/admin", adminSettingsRoute);
+
 // ✅ Test Route
 app.get("/", (req, res) => {
   res.send("🚀 WorkZen HRMS backend connected successfully!");
@@ -55,3 +71,18 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Server running on port ${port}`);
 });
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(cors({ origin: ["http://localhost:5173"], credentials: true }));
+
+app.use("/api/admin", salaryRoutes);
+// 🧪 Run once immediately (for testing)
+  cleanupInactiveUsers();
+
+  // 🕛 Schedule cleanup job (runs every 1 min for testing)
+  cron.schedule("0 0 * * *", () => {
+    console.log("🕛 Running cleanup job...");
+    cleanupInactiveUsers();
+  });

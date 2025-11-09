@@ -44,6 +44,8 @@ export default function TimeOffPage() {
   // admin/hr view
   const [allLeaves, setAllLeaves] = useState([]);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All"); // ⬅️ NEW
+
 
   const showToast = (msg, type = "success") => {
     setToast({ msg, type });
@@ -92,15 +94,31 @@ export default function TimeOffPage() {
   const isAdminSide = me && me.role !== "Employee";
   const filtered = useMemo(() => {
     if (!isAdminSide) return allLeaves;
+
     const q = search.trim().toLowerCase();
-    if (!q) return allLeaves;
-    return allLeaves.filter(l =>
-      (l.user?.name || "").toLowerCase().includes(q) ||
-      (l.user?.email || "").toLowerCase().includes(q) ||
-      (l.time_off_type || "").toLowerCase().includes(q) ||
-      (l.status || "").toLowerCase().includes(q)
-    );
-  }, [allLeaves, search, isAdminSide]);
+    let rows = allLeaves;
+
+    // search filter
+    if (q) {
+      rows = rows.filter((l) =>
+        (l.user?.name || "").toLowerCase().includes(q) ||
+        (l.user?.email || "").toLowerCase().includes(q) ||
+        (l.time_off_type || l.leave_type || "").toLowerCase().includes(q) ||
+        (l.status || "").toLowerCase().includes(q)
+      );
+    }
+
+    // status filter
+    if (statusFilter !== "All") {
+      rows = rows.filter(
+        (l) => (l.status || "Pending").toLowerCase() === statusFilter.toLowerCase()
+      );
+    }
+
+    return rows;
+  }, [allLeaves, search, isAdminSide, statusFilter]);
+
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -123,18 +141,10 @@ export default function TimeOffPage() {
               NEW
             </button>
           )}
-
-          {isAdminSide && (
-            <div className="ml-auto w-full max-w-md">
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by name, email, type, status"
-                className="w-full rounded-xl border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
-              />
-            </div>
-          )}
         </div>
+
+
+
       </header>
 
       {/* Content with left panel (same style as Dashboard) */}
@@ -157,7 +167,7 @@ export default function TimeOffPage() {
                   className={({ isActive }) =>
                     `block px-3 py-2 text-sm ${isActive ? "bg-blue-100 text-blue-700 font-semibold" : "hover:bg-gray-50"}`
                   }
-                  end={item.to === "/"}
+                  end={item.to === "/dashboard"}
                 >
                   {item.label}
                 </NavLink>
@@ -170,8 +180,30 @@ export default function TimeOffPage() {
             {loading ? (
               <div className="text-sm text-gray-500">Loading time off…</div>
             ) : isAdminSide ? (
+              // <AdminLeaves
+              //   rows={filtered}
+              //   onAct={async (id, status) => {
+              //     try {
+              //       await api(`/leave/status/${id}`, {
+              //         method: "PUT",
+              //         body: JSON.stringify({ status }),
+              //       });
+              //       showToast(`Leave ${status.toLowerCase()} ✅`);
+              //       setAllLeaves((rows) =>
+              //         rows.map((r) => (r.leave_id === id ? { ...r, status } : r))
+              //       );
+              //     } catch (e) {
+              //       showToast(e.message, "error");
+              //     }
+              //   }}
+              // />
+
               <AdminLeaves
                 rows={filtered}
+                search={search}
+                setSearch={setSearch}
+                statusFilter={statusFilter}
+                setStatusFilter={setStatusFilter}
                 onAct={async (id, status) => {
                   try {
                     await api(`/leave/status/${id}`, {
@@ -187,6 +219,7 @@ export default function TimeOffPage() {
                   }
                 }}
               />
+
             ) : (
               <EmployeeLeaves
                 summary={summary}
@@ -209,11 +242,10 @@ export default function TimeOffPage() {
 
       {toast && (
         <div
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow border ${
-            toast.type === "error"
-              ? "bg-rose-50 border-rose-200 text-rose-700"
-              : "bg-emerald-50 border-emerald-200 text-emerald-700"
-          }`}
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow border ${toast.type === "error"
+            ? "bg-rose-50 border-rose-200 text-rose-700"
+            : "bg-emerald-50 border-emerald-200 text-emerald-700"
+            }`}
         >
           {toast.msg}
         </div>
@@ -225,14 +257,128 @@ export default function TimeOffPage() {
 /* =========================
    Admin/HR view
 ========================= */
-function AdminLeaves({ rows, onAct }) {
+// function AdminLeaves({ rows, onAct }) {
+//   return (
+//     <div className="space-y-6">
+//       <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+//         <div className="px-5 py-4 border-b">
+//           <p className="font-semibold text-gray-900 text-lg">All Time-Off Requests</p>
+//         </div>
+
+//         <div className="overflow-x-auto">
+//           <table className="min-w-full text-sm">
+//             <thead className="bg-gray-50 text-gray-700">
+//               <tr>
+//                 <Th>Employee</Th>
+//                 <Th>Email</Th>
+//                 <Th>Type</Th>
+//                 <Th className="text-center">Start</Th>
+//                 <Th className="text-center">End</Th>
+//                 <Th className="text-center">Status</Th>
+//                 <Th className="text-center">Action</Th>
+//               </tr>
+//             </thead>
+//             <tbody className="divide-y">
+//               {rows.map((r) => (
+//                 <tr key={r.leave_id} className="hover:bg-gray-50">
+//                   <Td className="whitespace-nowrap font-medium text-gray-900">{r.user?.name}</Td>
+//                   <Td className="whitespace-nowrap">{r.user?.email || "-"}</Td>
+//                   <Td className="whitespace-nowrap">{r.time_off_type || r.leave_type}</Td>
+//                   <Td className="text-center">{fmt(r.start_date)}</Td>
+//                   <Td className="text-center">{fmt(r.end_date)}</Td>
+//                   <Td className="text-center">
+//                     <StatusPill status={r.status} />
+//                   </Td>
+//                   <Td className="text-center">
+//                     <div className="inline-flex gap-2">
+//                       <button
+//                         disabled={r.status === "Approved"}
+//                         onClick={() => onAct(r.leave_id, "Approved")}
+//                         className={`h-7 w-7 rounded-full border ${r.status === "Approved" ? "opacity-40 cursor-not-allowed" : "hover:bg-green-50"
+//                           } flex items-center justify-center`}
+//                         title="Approve"
+//                       >
+//                         <span className="h-3 w-3 rounded-full bg-green-500 inline-block" />
+//                       </button>
+//                       <button
+//                         disabled={r.status === "Rejected"}
+//                         onClick={() => onAct(r.leave_id, "Rejected")}
+//                         className={`h-7 w-7 rounded-full border ${r.status === "Rejected" ? "opacity-40 cursor-not-allowed" : "hover:bg-rose-50"
+//                           } flex items-center justify-center`}
+//                         title="Reject"
+//                       >
+//                         <span className="h-3 w-3 rounded-full bg-red-500 inline-block" />
+//                       </button>
+//                     </div>
+//                   </Td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+function AdminLeaves({ rows, onAct, search, setSearch, statusFilter, setStatusFilter }) {
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+        {/* Card header with title + filters */}
         <div className="px-5 py-4 border-b">
-          <p className="font-semibold text-gray-900 text-lg">All Time-Off Requests</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-semibold text-gray-900 text-lg">
+              All Time-Off Requests
+            </p>
+            <p className="text-xs text-gray-500">
+              {rows.length} result{rows.length === 1 ? "" : "s"}
+            </p>
+          </div>
+
+          {/* Filters row */}
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* Search input */}
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by name, email, type, status"
+              className="w-full rounded-xl border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
+            />
+
+            {/* Status chips */}
+            <div className="md:col-span-2 flex flex-wrap items-center gap-2">
+              {["All", "Pending", "Approved", "Rejected"].map((s) => {
+                const active = statusFilter === s;
+                return (
+                  <button
+                    key={s}
+                    onClick={() => setStatusFilter(s)}
+                    className={`px-3 py-1.5 text-xs rounded-full border transition
+                      ${active
+                        ? "bg-purple-600 text-white border-purple-600"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"}`}
+                  >
+                    {s}
+                  </button>
+                );
+              })}
+              {/* Optional: quick clear */}
+              {(search || statusFilter !== "All") && (
+                <button
+                  onClick={() => { setSearch(""); setStatusFilter("All"); }}
+                  className="ml-1 px-3 py-1.5 text-xs rounded-full border bg-white text-gray-600 hover:bg-gray-50"
+                  title="Clear filters"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead className="bg-gray-50 text-gray-700">
@@ -243,6 +389,7 @@ function AdminLeaves({ rows, onAct }) {
                 <Th className="text-center">Start</Th>
                 <Th className="text-center">End</Th>
                 <Th className="text-center">Status</Th>
+                <Th>Reason</Th>
                 <Th className="text-center">Action</Th>
               </tr>
             </thead>
@@ -257,14 +404,18 @@ function AdminLeaves({ rows, onAct }) {
                   <Td className="text-center">
                     <StatusPill status={r.status} />
                   </Td>
+                  <Td title={r.description || ""}>
+                    {(r.description || "-").length > 60
+                      ? `${(r.description || "").slice(0, 60)}…`
+                      : (r.description || "-")}
+                  </Td>
                   <Td className="text-center">
                     <div className="inline-flex gap-2">
                       <button
                         disabled={r.status === "Approved"}
                         onClick={() => onAct(r.leave_id, "Approved")}
-                        className={`h-7 w-7 rounded-full border ${
-                          r.status === "Approved" ? "opacity-40 cursor-not-allowed" : "hover:bg-green-50"
-                        } flex items-center justify-center`}
+                        className={`h-7 w-7 rounded-full border ${r.status === "Approved" ? "opacity-40 cursor-not-allowed" : "hover:bg-green-50"
+                          } flex items-center justify-center`}
                         title="Approve"
                       >
                         <span className="h-3 w-3 rounded-full bg-green-500 inline-block" />
@@ -272,9 +423,8 @@ function AdminLeaves({ rows, onAct }) {
                       <button
                         disabled={r.status === "Rejected"}
                         onClick={() => onAct(r.leave_id, "Rejected")}
-                        className={`h-7 w-7 rounded-full border ${
-                          r.status === "Rejected" ? "opacity-40 cursor-not-allowed" : "hover:bg-rose-50"
-                        } flex items-center justify-center`}
+                        className={`h-7 w-7 rounded-full border ${r.status === "Rejected" ? "opacity-40 cursor-not-allowed" : "hover:bg-rose-50"
+                          } flex items-center justify-center`}
                         title="Reject"
                       >
                         <span className="h-3 w-3 rounded-full bg-red-500 inline-block" />
@@ -324,6 +474,7 @@ function EmployeeLeaves({ summary, rows, onRefresh, openNew, onCloseNew, onCreat
                 <Th>Type</Th>
                 <Th className="text-center">Start</Th>
                 <Th className="text-center">End</Th>
+                <Th>Reason</Th>
                 <Th className="text-center">Status</Th>
                 <Th>Attachment</Th>
               </tr>
@@ -334,6 +485,11 @@ function EmployeeLeaves({ summary, rows, onRefresh, openNew, onCloseNew, onCreat
                   <Td className="whitespace-nowrap">{r.time_off_type || r.leave_type}</Td>
                   <Td className="text-center">{fmt(r.start_date)}</Td>
                   <Td className="text-center">{fmt(r.end_date)}</Td>
+                  <Td className="whitespace-nowrap" title={r.description || ""}>
+                    {(r.description || "-").length > 60
+                      ? `${(r.description || "").slice(0, 60)}…`
+                      : (r.description || "-")}
+                  </Td>
                   <Td className="text-center"><StatusPill status={r.status} /></Td>
                   <Td className="whitespace-nowrap">
                     {r.attachment ? (
@@ -367,6 +523,7 @@ function NewLeaveModal({ onClose, onCreated }) {
   const [start, setStart] = useState(ymd(new Date()));
   const [end, setEnd] = useState(ymd(new Date()));
   const [file, setFile] = useState(null);
+  const [desc, setDesc] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState("");
 
@@ -381,6 +538,7 @@ function NewLeaveModal({ onClose, onCreated }) {
       fd.append("leave_type", timeOffType); // mirror
       fd.append("start_date", start);
       fd.append("end_date", end);
+      if (desc.trim()) fd.append("description", desc.trim());
       if (file) fd.append("attachment", file);
 
       const r = await api("/leave/apply", { method: "POST", body: fd });
@@ -402,6 +560,9 @@ function NewLeaveModal({ onClose, onCreated }) {
         </div>
 
         <div className="p-5 space-y-4 text-sm">
+
+
+
           <div>
             <label className="block text-gray-600 mb-1">Time-Off Type</label>
             <select
@@ -424,6 +585,22 @@ function NewLeaveModal({ onClose, onCreated }) {
               <label className="block text-gray-600 mb-1">End</label>
               <input type="date" className="w-full rounded-lg border px-3 py-2" value={end} onChange={(e) => setEnd(e.target.value)} />
             </div>
+          </div>
+
+          {/* Reason / Notes */}
+          <div>
+            <label className="block text-gray-600 mb-1">Reason / Notes (optional)</label>
+            <textarea
+              value={desc}
+              onChange={(e) => setDesc(e.target.value)}
+              placeholder="Briefly describe why you're taking time off…"
+              rows={3}
+              maxLength={500}
+              className="w-full rounded-lg border px-3 py-2"
+            />
+            <p className="text-[11px] text-gray-500 mt-1">
+              Up to 500 characters.
+            </p>
           </div>
 
           <div>

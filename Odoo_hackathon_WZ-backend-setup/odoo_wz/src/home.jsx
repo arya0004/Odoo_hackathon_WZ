@@ -252,3 +252,336 @@ function Role({ name, bullets = [] }) {
         </div>
     );
 }
+// import React from "react";
+
+// export default function Home() {
+//     return (
+//         <main className="relative min-h-screen overflow-hidden bg-white">
+//             {/* Navigation */}
+//             <header className="bg-white border-b border-gray-200">
+//                 <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 flex items-center justify-between">
+//                     <div className="flex items-center gap-2">
+//                         <div className="h-8 w-8 rounded-lg bg-purple-600 flex items-center justify-center">
+//                             <span className="text-white font-bold text-base">W</span>
+//                         </div>
+//                         <span className="font-bold text-xl text-gray-900">
+//                             WorkZen
+//                         </span>
+//                     </div>
+//                     <div className="flex items-center gap-3">
+//                         <a
+//                             href="#login"
+//                             className="hidden sm:inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-all"
+//                         >
+//                             Login
+//                         </a>
+//                         <a
+//                             href="#signup"
+//                             className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold text-white bg-purple-600 hover:bg-purple-700 transition-all"
+//                         >
+//                             Sign Up
+//                         </a>
+//                     </div>
+//                 </div>
+//             </header>
+
+//             {/* Hero Section */}
+//             <section className="relative bg-gradient-to-b from-purple-50 to-white pt-16 pb-20 overflow-hidden">
+//                 {/* Decorative grid lines */}
+//                 <div className="absolute inset-0 opacity-30" style={{
+//                     backgroundImage: `linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+//                                      linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)`,
+//                     backgroundSize: '60px 60px'
+//                 }}></div>
+
+//                 <div className="relative mx-auto max-w-6xl px-4 sm:px-6 text-center">
+//                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4">
+//                         Empower Your HR Team with{" "}
+//                         <span className="text-purple-600">WorkZen</span>
+//                     </h1>
+
+//                     <p className="text-base sm:text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
+//                         WorkZen offers all the features you would expect from your favorite HR Software and much more.
+//                     </p>
+
+//                     <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+//                         <a
+//                             href="#login"
+//                             className="inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold text-white bg-purple-600 hover:bg-purple-700 transition-all shadow-md"
+//                         >
+//                             Login
+//                         </a>
+//                         <a
+//                             href="#signup"
+//                             className="inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold border-2 border-gray-300 bg-white text-gray-900 hover:bg-gray-50 transition-all"
+//                         >
+//                             Sign Up
+//                         </a>
+//                     </div>
+
+//                     {/* Character Image */}
+//                     <div className="relative max-w-4xl mx-auto">
+//                         <img
+//                             src="/1.png"
+//                             alt="WorkZen HR Team Illustration"
+//                             className="w-full h-auto"
+//                         />
+//                     </div>
+//                 </div>
+//             </section>
+
+//             {/* What Makes WorkZen Standout */}
+//             <section className="bg-gray-900 py-16">
+//                 <div className="mx-auto max-w-6xl px-4 sm:px-6">
+//                     <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
+//                         What makes WorkZen HRMS Standout
+//                     </h2>
+
+//                     <div className="grid md:grid-cols-3 gap-8">
+//                         <StandoutCard
+//                             icon={<FreeIcon />}
+//                             title="Easy to Use"
+//                             description="WorkZen is designed with simplicity in mind. Intuitive interface that's easy to navigate."
+//                         />
+//                         <StandoutCard
+//                             icon={<OpenSourceIcon />}
+//                             title="Comprehensive"
+//                             description="All the HR modules you need in one place. From attendance to payroll management."
+//                         />
+//                         <StandoutCard
+//                             icon={<HostIcon />}
+//                             title="Secure & Reliable"
+//                             description="Your data is safe with enterprise-grade security and regular backups."
+//                         />
+//                     </div>
+//                 </div>
+//             </section>
+
+//             {/* All Modules Section */}
+//             <section className="py-16 bg-white">
+//                 <div className="mx-auto max-w-6xl px-4 sm:px-6">
+//                     <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-4">
+//                         All the modules you'll ever need in one software.
+//                     </h2>
+
+//                     <div className="mt-12 grid lg:grid-cols-2 gap-12 items-center">
+//                         {/* Left Content */}
+//                         <div className="space-y-8">
+//                             <ModuleFeature
+//                                 badge="Attendance"
+//                                 title="Seamless Integration and Familiarization"
+//                                 description="Streamline employee attendance with automated check-in/out feature, eliminating manual tracking effortlessly."
+//                             />
+//                             <ModuleFeature
+//                                 badge="Leave"
+//                                 title="Preparation for a Successful Start"
+//                                 description="Simplify leave applications and approval workflows with automated tracking and balance management."
+//                             />
+//                             <ModuleFeature
+//                                 badge="Payroll"
+//                                 title="Enhancing engagement, productivity, and retention"
+//                                 description="Automated salary calculations, deductions, and payslip generation with comprehensive reports."
+//                             />
+
+//                             <a href="#" className="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700">
+//                                 Explore More
+//                                 <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+//                                 </svg>
+//                             </a>
+//                         </div>
+
+//                         {/* Right Image Placeholder */}
+//                         {/* <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-dashed border-purple-200 p-8 min-h-[500px] flex items-center justify-center">
+//                             <div className="text-center">
+//                                 <svg className="mx-auto h-20 w-20 text-purple-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+//                                 </svg>
+//                                 <p className="text-purple-500 font-medium">Screenshot placeholder</p>
+//                             </div>
+//                         </div> */}
+//                         <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl border-2 border-purple-200 p-8 min-h-[500px] flex items-center justify-center">
+//                             <img
+//                                 src="/dashboard.png"      // <-- Change the name according to your file
+//                                 alt="Dashboard Preview"
+//                                 className="w-full h-auto rounded-xl shadow-lg"
+//                             />
+//                         </div>
+//                     </div>
+//                 </div>
+//             </section>
+
+//             {/* Roles Section */}
+//             <section className="py-16 bg-gray-50">
+//                 <div className="mx-auto max-w-6xl px-4 sm:px-6">
+//                     <div className="text-center mb-12">
+//                         <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+//                             Built for every team member
+//                         </h2>
+//                         <p className="text-lg text-gray-600">
+//                             Tailored experiences for different roles in your organization
+//                         </p>
+//                     </div>
+
+//                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+//                         <RoleCard
+//                             name="Admin"
+//                             color="purple"
+//                             responsibilities={[
+//                                 "Complete system control",
+//                                 "User & role management",
+//                                 "System configuration",
+//                                 "Audit logs & reports"
+//                             ]}
+//                         />
+//                         <RoleCard
+//                             name="Employee"
+//                             color="blue"
+//                             responsibilities={[
+//                                 "Apply for leave",
+//                                 "View attendance records",
+//                                 "Access payslips",
+//                                 "Update profile"
+//                             ]}
+//                         />
+//                         <RoleCard
+//                             name="HR Officer"
+//                             color="green"
+//                             responsibilities={[
+//                                 "Manage employee data",
+//                                 "Monitor attendance",
+//                                 "Allocate leave quotas",
+//                                 "Generate HR reports"
+//                             ]}
+//                         />
+//                         <RoleCard
+//                             name="Payroll Officer"
+//                             color="orange"
+//                             responsibilities={[
+//                                 "Process payroll",
+//                                 "Generate payslips",
+//                                 "Manage deductions",
+//                                 "Review time-off"
+//                             ]}
+//                         />
+//                     </div>
+//                 </div>
+//             </section>
+
+//             {/* CTA Section */}
+//             <section className="py-20 bg-gradient-to-br from-purple-600 to-purple-800">
+//                 <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center">
+//                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+//                         Ready to transform your HR?
+//                     </h2>
+//                     <p className="text-lg sm:text-xl text-purple-100 mb-10">
+//                         Join organizations that trust WorkZen to manage their most valuable asset—their people.
+//                     </p>
+//                     <a
+//                         href="#signup"
+//                         className="inline-flex items-center justify-center rounded-md px-8 py-4 text-base font-semibold text-purple-600 bg-white hover:bg-gray-50 transition-all shadow-xl"
+//                     >
+//                         Sign Up Now
+//                         <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+//                         </svg>
+//                     </a>
+//                 </div>
+//             </section>
+
+//             {/* Footer */}
+//             <footer className="bg-white border-t border-gray-200 py-12">
+//                 <div className="mx-auto max-w-6xl px-4 sm:px-6">
+//                     <div className="text-center text-sm text-gray-500">
+//                         <p className="mb-2">© 2025 WorkZen. All rights reserved.</p>
+//                         <p>
+//                             View{" "}
+//                             <a className="text-purple-600 hover:text-purple-700 underline" href="https://link.excalidraw.com/l/65VNwvy7c4X/7gxoB8JymIS" target="_blank" rel="noreferrer">
+//                                 design mockup
+//                             </a>
+//                         </p>
+//                     </div>
+//                 </div>
+//             </footer>
+//         </main>
+//     );
+// }
+
+// /* Standout Card Component */
+// function StandoutCard({ icon, title, description }) {
+//     return (
+//         <div className="text-center">
+//             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gray-800 border-4 border-gray-700 mb-4">
+//                 {icon}
+//             </div>
+//             <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+//             <p className="text-gray-300 text-sm">{description}</p>
+//         </div>
+//     );
+// }
+
+// /* Module Feature Component */
+// function ModuleFeature({ badge, title, description }) {
+//     return (
+//         <div>
+//             <span className="inline-block px-3 py-1 text-xs font-semibold text-purple-700 bg-purple-100 rounded-full mb-3">
+//                 {badge}
+//             </span>
+//             <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
+//             <p className="text-gray-600">{description}</p>
+//         </div>
+//     );
+// }
+
+// /* Role Card Component */
+// function RoleCard({ name, color, responsibilities }) {
+//     const colorMap = {
+//         purple: "bg-purple-600",
+//         blue: "bg-blue-600",
+//         green: "bg-green-600",
+//         orange: "bg-orange-600"
+//     };
+
+//     return (
+//         <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-lg transition-all">
+//             <div className={`inline-block px-4 py-2 rounded-md ${colorMap[color]} text-white text-sm font-semibold mb-4`}>
+//                 {name}
+//             </div>
+//             <ul className="space-y-2">
+//                 {responsibilities.map((item, idx) => (
+//                     <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+//                         <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+//                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+//                         </svg>
+//                         <span>{item}</span>
+//                     </li>
+//                 ))}
+//             </ul>
+//         </div>
+//     );
+// }
+
+// /* Icon Components */
+// function FreeIcon() {
+//     return (
+//         <svg className="w-10 h-10 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+//         </svg>
+//     );
+// }
+
+// function OpenSourceIcon() {
+//     return (
+//         <svg className="w-10 h-10 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+//         </svg>
+//     );
+// }
+
+// function HostIcon() {
+//     return (
+//         <svg className="w-10 h-10 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+//         </svg>
+//     );
+// }

@@ -124,8 +124,7 @@ bash
 Copy code
 git commit -m "Added feature"
 Push and open a Pull Request 🎉
-
-👨‍💻 Team Members
+## 👨‍💻 Team Members
 Name	Role	Responsibilities
 Jineshwari Bagul	Team Lead / Frontend	UI, Interactions, Integrations
 Member 2	Backend Dev	Payroll + Models

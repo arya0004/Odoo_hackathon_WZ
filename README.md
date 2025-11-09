@@ -1,69 +1,79 @@
-**🏢 WorkZen HRMS**
+# 🏢 **WorkZen HRMS**
 
-WorkZen is a modern, scalable Human Resource Management System (HRMS) designed to streamline and automate HR operations.
-It combines Employee Management, Attendance Tracking, Airplane / Travel Management, and Payroll Processing — all in one unified platform.
+**WorkZen** is a modern, scalable **Human Resource Management System (HRMS)** designed to streamline and automate HR operations.  
+It combines **Employee Management**, **Attendance Tracking**, **Airplane / Travel Management**, and **Payroll Processing** — all in one unified platform.  
 
-Built with precision for the Odoo Hackathon.
+Built with precision for the **Odoo Hackathon**.
 
-**⚙️ Key Features**
+---
+
+## ⚙️ **Key Features**
+
+---
+
+### 👥 _Employee & Role Management_
+
+- Centralized **employee directory**  
+- **Role-based access control** (Admin / HR / Payroll / Employee)  
+- Profile creation, updates, and department assignments  
+
+---
+
+### 🕒 _Attendance Tracking_
+
+- **Daily check-in / check-out** functionality  
+- **Monthly attendance summary** with visual logs  
+- **Auto-sync** with payroll for accuracy  
+
+---
+
+### ✈️ _Airplane / Travel Management_
+
+- Manage **business trips and flight bookings** for employees  
+- HR can **approve or decline travel requests**  
+- Auto-integrated with **payroll for travel reimbursements**  
+- Generate **travel summary reports** per employee  
+
+---
+
+### 💸 _Payroll & Payslip Generation_
+
+- Automated **monthly salary computation**  
+- Supports **allowances**, **deductions**, and **travel reimbursements**  
+- Generates **professional PDF salary slips** using **Puppeteer**  
+- Ensures **data accuracy** and **timely payouts**  
+
+---
+
+### 📊 _Insights Dashboard_
+
+- Unified **dashboard** for attendance, travel, and payroll analytics  
+- Visual insights powered by **Chart.js**  
+- Minimal and responsive interface  
+
+---
+
+## 🧰 **Technology Stack**
+
+---
+
+| **Layer** | **Technology Used** |
+|------------|--------------------|
+| **Frontend** | React.js, TailwindCSS |
+| **Backend** | Node.js, Express.js |
+| **Database** | MySQL (Sequelize ORM) |
+| **Authentication** | JWT, bcrypt |
+| **PDF Generation** | Puppeteer |
+| **Charts** | Chart.js |
+| **UI/UX** | Custom SVG Assets + Tailwind Components |
+
+---
+
+## 📁 **Project Structure**
+
+---
 
 
-
-_👥 Employee & Role Management_
-
-Centralized employee directory
-
-Role-based access control (Admin / HR / Payroll / Employee)
-
-Profile creation, updates, and department assignments
-
-_🕒 Attendance Tracking_
-
-Daily check-in / check-out functionality
-
-Monthly attendance summary with visual logs
-
-Auto-sync with payroll for accuracy
-
-_✈️ Airplane / Travel Management_
-
-Manage business trips and flight bookings for employees
-
-HR can approve or decline travel requests
-
-Auto-integrated with payroll for travel reimbursements
-
-Generate travel summary reports per employee
-
-_💸 Payroll & Payslip Generation_
-
-Automated monthly salary computation
-
-Supports allowances, deductions, and travel reimbursements
-
-Generates professional PDF salary slips using Puppeteer
-
-Ensures data accuracy and timely payouts
-
-_📊 Insights Dashboard_
-
-Unified dashboard for attendance, travel, and payroll analytics
-
-Visual insights powered by Chart.js
-
-Minimal and responsive interface
-
-**🧰 Technology Stack**
-Layer	Technology Used 
-Frontend	       React.js, TailwindCSS
-Backend	         Node.js, Express.js
-Database	       MySQL (Sequelize ORM)
-Authentication	 JWT, bcrypt
-PDF Generation	 Puppeteer
-Charts	         Chart.js
-UI/UX	           Custom SVG Assets + Tailwind Components
-
-📁 Project Structure
 WorkZen/
 │
 ├── client/              # Frontend (React)
@@ -79,11 +89,19 @@ WorkZen/
 │
 └── README.md
 
-**🧩 Installation & Setup**
 
-🪄 1️⃣ Clone the Repository
+---
+
+## 🧩 **Installation & Setup**
+
+---
+
+### 🪄 **1️⃣ Clone the Repository**
+
+```bash
 git clone https://github.com/yourusername/workzen-hrms.git
 cd workzen-hrms
+
 
 ⚙️ 2️⃣ Backend Setup
 cd server

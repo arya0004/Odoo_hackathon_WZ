@@ -5,7 +5,7 @@ It combines **Employee Management**, **Attendance Tracking**, **Airplane / Trave
 
 Built with precision for the **Odoo Hackathon**.
 
-Link: {video demonstration of project}
+Link: (https://drive.google.com/drive/folders/1qKwb727RvWoA6PAgV7iVvf_DA9f4QEN1?usp=sharing)
 
 ---
 

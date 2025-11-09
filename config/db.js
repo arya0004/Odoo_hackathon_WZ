@@ -322,11 +322,16 @@ const Leave = sequelize.define(
     },
     start_date: { type: DataTypes.DATEONLY, allowNull: false },
     end_date: { type: DataTypes.DATEONLY, allowNull: false },
-    status: { type: DataTypes.ENUM("Pending", "Approved", "Rejected"), defaultValue: "Pending" },
+    description: { type: DataTypes.TEXT, allowNull: true }, // 🆕 Added this line
+    status: {
+      type: DataTypes.ENUM("Pending", "Approved", "Rejected"),
+      defaultValue: "Pending",
+    },
     attachment: { type: DataTypes.STRING },
   },
   { tableName: "leaves", timestamps: true }
 );
+
 
 // ==========================
 // PAYROLL MODEL

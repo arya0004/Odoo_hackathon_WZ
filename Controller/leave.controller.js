@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 export const applyLeave = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { leave_type, time_off_type, start_date, end_date } = req.body;
+    const { leave_type, time_off_type, start_date, end_date, description } = req.body;
 
     if (!leave_type || !start_date || !end_date || !time_off_type) {
       return res.status(400).json({ message: "All fields are required" });
@@ -20,6 +20,7 @@ export const applyLeave = async (req, res) => {
       time_off_type,
       start_date,
       end_date,
+      description, // ✅ store text input
       status: "Pending",
       attachment,
     });
@@ -33,6 +34,7 @@ export const applyLeave = async (req, res) => {
     res.status(500).json({ message: "Server error while applying for leave" });
   }
 };
+
 
 // ✅ 2️⃣ Employee views their own leaves
 export const getMyLeaves = async (req, res) => {

@@ -128,3 +128,34 @@ export const updateEmployeeFullProfile = async (req, res) => {
     res.status(500).json({ message: "Server error updating profile" });
   }
 };
+// server/Controller/admin.controller.js
+
+export const adminSignup = async (req, res) => {
+  try {
+    const { name, email, password, company_name, phone } = req.body;
+    const logo = req.file ? `/uploads/company_logos/${req.file.filename}` : null;
+
+    const company = await Company.create({
+      company_name,
+      company_logo: logo,
+    });
+
+    const admin = await User.create({
+      name,
+      email,
+      password,
+      phone,
+      role: "Admin",
+      company_id: company.company_id,
+    });
+
+    res.status(201).json({
+      message: "✅ Admin registered successfully",
+      admin,
+      company,
+    });
+  } catch (error) {
+    console.error("❌ Error in adminSignup:", error);
+    res.status(500).json({ message: "Server error during admin signup" });
+  }
+};

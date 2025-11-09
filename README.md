@@ -7,6 +7,8 @@ Built with precision for the Odoo Hackathon.
 
 **⚙️ Key Features**
 
+
+
 _👥 Employee & Role Management_
 
 Centralized employee directory

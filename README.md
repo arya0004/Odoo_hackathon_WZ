@@ -73,7 +73,7 @@ Built with precision for the **Odoo Hackathon**.
 
 ---
 
-
+```bash
 WorkZen/
 │
 ├── client/              # Frontend (React)
@@ -90,18 +90,10 @@ WorkZen/
 └── README.md
 
 
----
-
-## 🧩 **Installation & Setup**
-
----
-
-### 🪄 **1️⃣ Clone the Repository**
-
-```bash
+🧩 Installation & Setup
+🪄 1️⃣ Clone the Repository
 git clone https://github.com/yourusername/workzen-hrms.git
 cd workzen-hrms
-
 
 ⚙️ 2️⃣ Backend Setup
 cd server
@@ -145,7 +137,7 @@ Clean, corporate-grade layout
 
 Generated using Puppeteer for pixel-perfect precision.
 
-_🤝 Contribution Workflow_
+🤝 Contribution Workflow
 
 Fork this repository
 
@@ -174,7 +166,7 @@ Aashana Sonarkar
 
 To build a clean, efficient, and automated HRMS that eliminates manual HR workflows — empowering HR teams to focus on people, not paperwork.
 
-💡 Acknowledgements
+**💡 Acknowledgements**
 
 Inspired by the Odoo Ecosystem
 

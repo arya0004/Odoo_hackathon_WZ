@@ -189,6 +189,7 @@ export const userAuth = async (req, res, next) => {
     // ✅ 4️⃣ Attach user info to req.user for downstream routes
     req.user = {
       id: user.user_id,
+      user_id: user.user_id,
       name: user.name,
       role: user.role,
       company_id: user.company_id,

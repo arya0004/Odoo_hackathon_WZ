@@ -35,7 +35,8 @@ import { Op } from "sequelize";
 // };
 export const applyLeave = async (req, res) => {
   try {
-    const userId = req.user.id;
+    //const userId = req.user.id;
+    const userId = req.user?.user_id; 
     const { leave_type, time_off_type, start_date, end_date, description } = req.body;
 
     if (!leave_type || !start_date || !end_date || !time_off_type) {

@@ -1417,30 +1417,103 @@ export default function Dashboard() {
     })();
   }, [nav]);
 
+  /* --- company helpers --- */
+  function readCompanyId(obj) {
+    if (!obj) return null;
+    // try several shapes
+    if (obj.company_id != null) return Number(obj.company_id);
+    if (obj.companyId != null) return Number(obj.companyId);
+    if (obj.company && obj.company.company_id != null) return Number(obj.company.company_id);
+    if (obj.company && obj.company.id != null) return Number(obj.company.id);
+    return null;
+  }
+
+  function sameCompany(a, b) {
+    const ca = readCompanyId(a);
+    const cb = readCompanyId(b);
+    return ca != null && cb != null && ca === cb;
+  }
+
+
   /* 2) Directory (Employee-only cards) */
+  // useEffect(() => {
+  //   if (!me) return;
+  //   let cancelled = false;
+
+  //   (async () => {
+  //     setLoading(true);
+  //     try {
+  //       let list = [];
+  //       if (["Admin", "HR", "Payroll"].includes(me.role)) {
+  //         const r = await api("/employee/directory");
+  //         list = r.employees || [];
+  //       } else {
+  //         const d = await api(`/attendance/admin/date?date=${todayStr}`);
+  //         const arr = (d.attendanceList || []);
+  //         list = arr.map(u => ({
+  //           user_id: u.user_id,
+  //           name: u.name,
+  //           email: "",
+  //           role: u.role,
+  //           join_date: "",
+  //         }));
+  //       }
+  //       list = list.filter(e => (e.role || "").toLowerCase() === "employee");
+  //       if (!cancelled) setEmployees(list);
+  //     } catch (e) {
+  //       if (!cancelled) showToast(e.message, "error");
+  //     } finally {
+  //       if (!cancelled) setLoading(false);
+  //     }
+  //   })();
+
+  //   return () => { cancelled = true; };
+  // }, [me]);
+
+  /* 2) Directory (Employee-only cards, scoped to my company) */
+  /* 2) Directory (Employee-only cards, scoped to my company, robust) */
+  /* 2) Directory (Employee-only cards, scoped to MY company for all roles) */
   useEffect(() => {
     if (!me) return;
     let cancelled = false;
 
+    // tiny helpers (keep near top of file if you don't already have them)
+    const readCompanyId = (obj) => {
+      if (!obj) return null;
+      if (obj.company_id != null) return Number(obj.company_id);
+      if (obj.companyId != null) return Number(obj.companyId);
+      if (obj.company?.company_id != null) return Number(obj.company.company_id);
+      if (obj.company?.id != null) return Number(obj.company.id);
+      return null;
+    };
+
     (async () => {
       setLoading(true);
       try {
-        let list = [];
-        if (["Admin", "HR", "Payroll"].includes(me.role)) {
-          const r = await api("/employee/directory");
-          list = r.employees || [];
-        } else {
-          const d = await api(`/attendance/admin/date?date=${todayStr}`);
-          const arr = (d.attendanceList || []);
-          list = arr.map(u => ({
-            user_id: u.user_id,
-            name: u.name,
-            email: "",
-            role: u.role,
-            join_date: "",
-          }));
+        // 1) Prefer server-side scoping for *everyone* (including Employee)
+        // Your backend should permit this for Employee and return only same-company users.
+        let r;
+        try {
+          r = await api(`/employee/directory?companyId=${me.company}`);
+        } catch {
+          // fallback to unscoped, then we’ll filter client-side
+          r = await api(`/employee/directory`);
         }
+
+        let list = r.employees || [];
+
+        // 2) HARD client filter to same company (protects against server not filtering)
+        const myCo = Number(me.company);
+        list = list.filter(emp => {
+          const cid = readCompanyId(emp);
+          // If a row has no company id, we drop it for Employees to avoid leaking cross-company users.
+          // (Admins will still pass because they call the same code and usually have cid in payload.)
+          return cid != null && cid === myCo;
+        });
+
+        // 3) Only show Employee role
         list = list.filter(e => (e.role || "").toLowerCase() === "employee");
+
         if (!cancelled) setEmployees(list);
       } catch (e) {
         if (!cancelled) showToast(e.message, "error");
@@ -1451,6 +1524,8 @@ export default function Dashboard() {
 
     return () => { cancelled = true; };
   }, [me]);
+
+
 
   /* 3) Today’s statuses */
   useEffect(() => {
@@ -1477,14 +1552,49 @@ export default function Dashboard() {
     return () => { cancelled = true; };
   }, [employees]);
 
-  /* Header-dot toggle (Employees only) */
+  // /* Header-dot toggle (Employees only) */
+  // const toggleMyAttendance = async () => {
+  //   if (!me || me.role !== "Employee") return;
+  //   const current = statuses[me.id] ?? "Unknown";
+  //   const next = current === "Present" ? "Absent" : "Present";
+  //   setStatuses((s) => ({ ...s, [me.id]: next }));
+  //   try {
+  //     if (next === "Present") {
+  //       await api("/attendance/checkin", { method: "POST" });
+  //       showToast("Checked in ✅");
+  //     } else {
+  //       await api("/attendance/checkout", { method: "POST" });
+  //       showToast("Checked out ✅");
+  //     }
+  //   } catch (e) {
+  //     setStatuses((s) => ({ ...s, [me.id]: current }));
+  //     showToast(e.message, "error");
+  //   } finally {
+  //     try {
+  //       const d = await api(`/attendance/status/${me.id}`);
+  //       setStatuses((s) => ({ ...s, [me.id]: d.status ?? "Unknown" }));
+  //     } catch { }
+  //   }
+  // };
+
   const toggleMyAttendance = async () => {
     if (!me || me.role !== "Employee") return;
-    const current = statuses[me.id] ?? "Unknown";
-    const next = current === "Present" ? "Absent" : "Present";
-    setStatuses((s) => ({ ...s, [me.id]: next }));
+
+    // 1) Always fetch the fresh status from the server first
+    let current = "Absent";
     try {
-      if (next === "Present") {
+      const d = await api(`/attendance/status/${me.id}`);
+      current = d.status || "Absent";
+    } catch {
+      current = statuses[me.id] ?? "Absent";
+    }
+
+    // 2) Decide the intended action
+    const want = current === "Present" ? "Absent" : "Present";
+    setStatuses((s) => ({ ...s, [me.id]: want }));
+
+    try {
+      if (want === "Present") {
         await api("/attendance/checkin", { method: "POST" });
         showToast("Checked in ✅");
       } else {
@@ -1492,15 +1602,28 @@ export default function Dashboard() {
         showToast("Checked out ✅");
       }
     } catch (e) {
-      setStatuses((s) => ({ ...s, [me.id]: current }));
-      showToast(e.message, "error");
+      // If we tried to check in but server says already checked in → gracefully switch to checkout
+      if (want === "Present" && (e.status === 400 || /already checked in/i.test(e.message))) {
+        try {
+          await api("/attendance/checkout", { method: "POST" });
+          showToast("Checked out ✅");
+        } catch (e2) {
+          setStatuses((s) => ({ ...s, [me.id]: current }));
+          showToast(e2.message, "error");
+        }
+      } else {
+        setStatuses((s) => ({ ...s, [me.id]: current }));
+        showToast(e.message, "error");
+      }
     } finally {
+      // 3) Re-sync from server so header dot + cards are accurate
       try {
-        const d = await api(`/attendance/status/${me.id}`);
-        setStatuses((s) => ({ ...s, [me.id]: d.status ?? "Unknown" }));
-      } catch {}
+        const d2 = await api(`/attendance/status/${me.id}`);
+        setStatuses((s) => ({ ...s, [me.id]: d2.status ?? "Unknown" }));
+      } catch { }
     }
   };
+
 
   const logout = async () => {
     try {
@@ -1640,11 +1763,10 @@ export default function Dashboard() {
                 <button
                   key={f.id}
                   onClick={() => setQuick(f.id)}
-                  className={`rounded-full border px-3 py-1.5 text-sm ${
-                    quick === f.id
-                      ? "bg-purple-600 border-purple-600 text-white"
-                      : "bg-white border-purple-200 text-purple-700 hover:bg-purple-50"
-                  }`}
+                  className={`rounded-full border px-3 py-1.5 text-sm ${quick === f.id
+                    ? "bg-purple-600 border-purple-600 text-white"
+                    : "bg-white border-purple-200 text-purple-700 hover:bg-purple-50"
+                    }`}
                 >
                   {f.label}
                 </button>
@@ -1701,11 +1823,10 @@ export default function Dashboard() {
       {/* Toast */}
       {toast && (
         <div
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow border ${
-            toast.type === "error"
-              ? "bg-rose-50 border-rose-200 text-rose-700"
-              : "bg-emerald-50 border-emerald-200 text-emerald-700"
-          }`}
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2 rounded-lg shadow border ${toast.type === "error"
+            ? "bg-rose-50 border-rose-200 text-rose-700"
+            : "bg-emerald-50 border-emerald-200 text-emerald-700"
+            }`}
         >
           {toast.msg}
         </div>
@@ -1721,15 +1842,16 @@ function HeaderToggle({ status, onToggle, meRole }) {
   const isStaff = ["Admin", "HR", "Payroll"].includes(meRole);
   const colorClass =
     status === "Present" ? "bg-green-500" :
-    status === "Absent" ? "bg-yellow-400" :
-    status === "Admin" ? "bg-red-500" :
-    "bg-red-500";
+      status === "Absent" ? "bg-yellow-400" :
+        status === "Admin" ? "bg-red-500" :
+          "bg-red-500";
 
   const label =
     status === "Present" ? "Checked in" :
-    status === "Absent" ? "Checked out" :
-    status === "Admin" ? "Staff (no toggle)" :
-    "Not updated";
+      status === "Absent" ? "Checked out" :
+        status === "Leave" ? "On leave" :
+          status === "Admin" ? "Staff (no toggle)" :
+            "Not updated";
 
   return (
     <button
@@ -1737,9 +1859,8 @@ function HeaderToggle({ status, onToggle, meRole }) {
       onClick={isStaff ? undefined : onToggle}
       title={`My status: ${label}${isStaff ? "" : ". Click to toggle"}`}
       aria-label="Toggle my attendance"
-      className={`ml-3 inline-flex items-center gap-2 rounded-full border border-gray-200 px-2.5 py-1.5 text-xs ${
-        isStaff ? "cursor-not-allowed opacity-70" : "hover:bg-gray-50"
-      }`}
+      className={`ml-3 inline-flex items-center gap-2 rounded-full border border-gray-200 px-2.5 py-1.5 text-xs ${isStaff ? "cursor-not-allowed opacity-70" : "hover:bg-gray-50"
+        }`}
     >
       <span className={`h-3.5 w-3.5 rounded-full ${colorClass}`} />
       <span className="hidden sm:inline text-gray-700">{label}</span>
@@ -2083,7 +2204,7 @@ function initials(name = "") {
 //   const [addOpen, setAddOpen] = useState(false);
 
 //   // quick filters: all | in | out | leave
-//   const [quick, setQuick] = useState("all");
+//   const [quick, setQuick]   = useState("all");
 
 //   const showToast = (msg, type = "success") => {
 //     setToast({ msg, type });

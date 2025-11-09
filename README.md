@@ -1,7 +1,7 @@
 🏢 WorkZen HRMS
 
 WorkZen is a modern, scalable Human Resource Management System (HRMS) built for seamless people operations.
-It unifies employee management, attendance, travel, and payroll processing into a single intuitive platform — designed and developed for the Odoo Hackathon.
+It unifies employee management, attendance tracking, travel (airplane) management, and payroll processing into a single intuitive platform — designed and developed for the Odoo Hackathon.
 
 ⚙️ Key Features
 👥 Employee & Role Management
@@ -26,9 +26,9 @@ Manage employee business trips and flight bookings
 
 HR can approve or decline travel requests
 
-Auto-integrates with payroll for expense reimbursement
+Auto-integrated with payroll for expense reimbursements
 
-Includes travel summary reports for each employee
+Includes travel summary reports per employee
 
 💸 Payroll & Payslip Generation
 
@@ -36,16 +36,16 @@ Automated monthly salary computation
 
 Dynamic inclusion of allowances, deductions, and travel reimbursements
 
-Professional PDF salary slip generation via Puppeteer
+Generates professional PDF salary slips using Puppeteer
 
 📊 Insights Dashboard
 
-Unified dashboard displaying attendance, travel, and payroll analytics
+Unified dashboard showing attendance, travel, and payroll analytics
 
 Clean visual summaries powered by Chart.js
 
 🧰 Technology Stack
-Layer	Technology
+Layer	Technology Used
 Frontend	React.js, TailwindCSS
 Backend	Node.js, Express.js
 Database	MySQL (Sequelize ORM)
@@ -97,9 +97,8 @@ npm install
 npm run dev
 
 
-Open the application in your browser:
-
-http://localhost:5173
+Visit the app in your browser:
+🌐 http://localhost:5173
 
 🧾 Sample Salary Slip (PDF Preview)
 
@@ -109,7 +108,7 @@ Company and employee details
 
 Worked days and travel reimbursements
 
-Earnings and deductions breakdown
+Detailed earnings and deductions
 
 Net salary summary
 
@@ -119,7 +118,7 @@ Generated using Puppeteer for pixel-perfect precision.
 
 🤝 Contribution Workflow
 
-Fork the repository
+Fork this repository
 
 Create a new branch
 
@@ -128,16 +127,16 @@ git checkout -b feature-name
 
 Commit your changes
 
-git commit -m "Added feature"
+git commit -m "Added new feature"
 
 
-Push and open a Pull Request 🎉
+Push to your branch and open a Pull Request 🎉
 
 👨‍💻 Team WorkZen
 Name	Role	Responsibilities
 Jineshwari Bagul	Team Lead / Frontend	UI Design, Integrations, User Flows
 Member 2	Backend Developer	Payroll Logic, APIs
-Member 3	Database Admin	Schema, Query Optimization
+Member 3	Database Admin	Schema Design, Query Optimization
 Member 4	UI & Documentation	Branding, Presentation
 🎯 Project Vision
 
@@ -147,6 +146,6 @@ To deliver a clean, efficient, and automated HRMS that eliminates manual HR work
 
 Inspired by the Odoo Ecosystem
 
-Thanks to all Hackathon mentors and open-source contributors
+Thanks to all Hackathon Mentors and Open-Source Contributors
 
 🌱 Built with precision, performance, and passion by Team WorkZen

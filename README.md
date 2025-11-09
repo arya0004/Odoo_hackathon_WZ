@@ -5,6 +5,8 @@ It combines **Employee Management**, **Attendance Tracking**, **Airplane / Trave
 
 Built with precision for the **Odoo Hackathon**.
 
+Link: {video demonstration of project}
+
 ---
 
 ## ⚙️ **Key Features**
@@ -12,47 +14,10 @@ Built with precision for the **Odoo Hackathon**.
 ---
 
 ### 👥 _Employee & Role Management_
-
-- Centralized **employee directory**  
-- **Role-based access control** (Admin / HR / Payroll / Employee)  
-- Profile creation, updates, and department assignments  
-
----
-
 ### 🕒 _Attendance Tracking_
-
-- **Daily check-in / check-out** functionality  
-- **Monthly attendance summary** with visual logs  
-- **Auto-sync** with payroll for accuracy  
-
----
-
-### ✈️ _Airplane / Travel Management_
-
-- Manage **business trips and flight bookings** for employees  
-- HR can **approve or decline travel requests**  
-- Auto-integrated with **payroll for travel reimbursements**  
-- Generate **travel summary reports** per employee  
-
----
-
+### ✈️ _Leave Management_
 ### 💸 _Payroll & Payslip Generation_
-
-- Automated **monthly salary computation**  
-- Supports **allowances**, **deductions**, and **travel reimbursements**  
-- Generates **professional PDF salary slips** using **Puppeteer**  
-- Ensures **data accuracy** and **timely payouts**  
-
----
-
 ### 📊 _Insights Dashboard_
-
-- Unified **dashboard** for attendance, travel, and payroll analytics  
-- Visual insights powered by **Chart.js**  
-- Minimal and responsive interface  
-
----
-
 ## 🧰 **Technology Stack**
 
 ---

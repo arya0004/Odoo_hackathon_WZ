@@ -134,7 +134,8 @@ export const adminSignup = async (req, res) => {
   try {
     const { name, email, password, company_name, phone } = req.body;
     const logo = req.file ? `/uploads/company_logos/${req.file.filename}` : null;
-
+console.log("🧾 req.body:", req.body);
+console.log("🖼 req.file:", req.file);
     const company = await Company.create({
       company_name,
       company_logo: logo,
